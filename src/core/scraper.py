@@ -7,10 +7,7 @@ class SlideScraper:
         self.page = page
 
     def find_target_frame(self):
-        """
-        Intelligently hunts for the DRM-protected viewer URL inside iframes.
-        """
-        # Wait a moment for iframes to populate
+        """Intelligently hunts for the DRM-protected viewer URL inside iframes."""
         time.sleep(2)
         
         # 1. Check current URL
@@ -36,24 +33,16 @@ class SlideScraper:
 
     def extract_slides(self, temp_dir, progress_callback=None):
         """
-        Generator that yields progress for each extracted slide.
+        Extracts slides to the temp directory.
         """
+        # We assume the caller (main.py) has already verified pages exist,
+        # but we grab the handle again to iterate.
         page_elements = self.get_slide_elements()
-        total_pages = len(page_elements)
         
-        if total_pages == 0:
-            # Retry once
-            time.sleep(3)
-            page_elements = self.get_slide_elements()
-            total_pages = len(page_elements)
-
-        if total_pages == 0:
-            return 0 
-
         for index, page_handle in enumerate(page_elements):
             page_num = index + 1
             
-            # Scroll
+            # Scroll to trigger lazy load
             page_handle.scroll_into_view_if_needed()
             
             try:
@@ -74,4 +63,4 @@ class SlideScraper:
             if progress_callback:
                 progress_callback(1)
                 
-        return total_pages
+        return len(page_elements)

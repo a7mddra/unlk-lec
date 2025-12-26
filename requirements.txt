@@ -1,0 +1,5 @@
+playwright
+pillow
+rich
+questionary
+nest_asyncio

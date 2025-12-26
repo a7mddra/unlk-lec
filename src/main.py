@@ -1,7 +1,6 @@
 import sys
 import time
 import tempfile
-import time
 from .core.config import Config
 from .core.browser import BrowserManager
 from .core.scraper import SlideScraper
@@ -49,7 +48,7 @@ def main():
             if raw_src:
                 cli.show_drm_found(raw_src)
                 
-                # Navigate if needed
+                # Navigate if needed (Context Trap Fix)
                 if page.url != raw_src:
                     cli.show_isolation_message()
                     page.goto(raw_src)
@@ -72,27 +71,24 @@ def main():
             cli.show_extraction_start(pdf_name)
             
             with tempfile.TemporaryDirectory() as temp_dir:
+                # 1. Analysis Phase (Count pages first)
                 with cli.console.status("[bold cyan]Analyzing DOM Structure...", spinner="dots"):
-                    total_pages = scraper.extract_slides(temp_dir) # Just count/dry run handled inside? No, simplified logic.
-                    # Wait, the previous logic did a count first. 
-                    # Let's adjust scraper to allow just checking count or doing it all at once?
-                    # The original code did: 1. Count (Analysis Phase) 2. Extract (Extraction Phase)
-                
-                # Re-instantiating scraper logic slightly to match original flow
-                # Actually, let's just peek count first
-                page_elements = scraper.get_slide_elements()
-                total_pages = len(page_elements)
-                
-                if total_pages == 0:
-                     # Retry logic handled in scraper
-                     # but let's just call extract directly for simplicity in this refactor?
-                     # Ideally we want the progress bar.
-                     pass
+                    # We peek at the count to set up the progress bar
+                    page_elements = scraper.get_slide_elements()
+                    total_pages = len(page_elements)
+                    
+                    # Retry logic if 0 (Lazy loading delay)
+                    if total_pages == 0:
+                        time.sleep(3)
+                        page_elements = scraper.get_slide_elements()
+                        total_pages = len(page_elements)
 
                 if total_pages > 0:
+                    # 2. Extraction Phase
                     with cli.create_progress_context() as progress:
                          task = progress.add_task(f"[green]Extracting {pdf_name}...", total=total_pages)
                          
+                         # Define callback to update UI from inside the scraper
                          def update_progress(advance):
                              progress.update(task, advance=advance)
                              

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Definition of colors for prettier output
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+echo -e "${CYAN}::: UNLK-LEC INSTALLER (Linux/Mac) :::${NC}"
+
+# Check for python3
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}Error: Python 3 is not installed.${NC}"
+    exit 1
+fi
+
+# 1. Create Virtual Environment
+echo -e "\n${GREEN}[+] Setting up Virtual Environment...${NC}"
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+    echo "    -> Created 'venv' directory."
+else
+    echo "    -> 'venv' already exists."
+fi
+
+# 2. Activate and Install
+echo -e "\n${GREEN}[+] Installing Dependencies...${NC}"
+source venv/bin/activate
+
+# Install pip dependencies
+pip install --upgrade pip
+if [ -f "requirements.txt" ]; then
+    pip install -r requirements.txt
+else
+    pip install playwright pillow rich questionary nest_asyncio
+fi
+
+# 3. Install Playwright Browsers
+echo -e "\n${GREEN}[+] Bootstrapping Chromium Engine...${NC}"
+if [ ! -d "venv/lib/python3.12/site-packages/playwright/driver/package/.local-browsers" ]; then 
+    # Check if we should reinstall or just install? safe to run install again
+    playwright install chromium
+fi
+
+# 4. Create Launch Shortcut
+echo -e "\n${GREEN}[+] Creating Launch Shortcut...${NC}"
+cat <<EOT > start.sh
+#!/bin/bash
+source $(pwd)/venv/bin/activate
+python3 $(pwd)/unlk-lec.py
+EOT
+chmod +x start.sh
+
+echo -e "\n${GREEN}✨ Installation Complete! ✨${NC}"
+echo -e "To run the app, simply execute:"
+echo -e "   ${CYAN}./start.sh${NC}"
