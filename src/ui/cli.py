@@ -77,7 +77,7 @@ class CLI:
             "What type of lecture do you want to extract?",
             choices=[
                 "PDF Document",
-                questionary.Choice("Video Stream (Soon)", disabled="Not implemented yet"),
+                questionary.Choice("Video Stream", disabled="(Soon)"),
                 "Exit"
             ],
             pointer=">"

@@ -1,3 +1,4 @@
 #!/bin/bash
-source /home/a7md/LibreLec/venv/bin/activate
-python3 /home/a7md/LibreLec/librelec.py
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$BASEDIR/venv/bin/activate"
+python3 "$BASEDIR/librelec.py" "$@"

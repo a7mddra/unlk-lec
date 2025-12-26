@@ -37,17 +37,20 @@ fi
 
 # 3. Install Playwright Browsers
 echo -e "\n${GREEN}[+] Bootstrapping Chromium Engine...${NC}"
-if [ ! -d "venv/lib/python3.12/site-packages/playwright/driver/package/.local-browsers" ]; then 
-    # Check if we should reinstall or just install? safe to run install again
-    playwright install chromium
+# Use python -m playwright to ensure we use the venv's playwright
+if ! python3 -m playwright install chromium; then
+    echo -e "${RED}Failed to install Playwright browsers.${NC}"
+    # Try one more time with system pip if venv failed (though venv should be active)
+    exit 1
 fi
 
 # 4. Create Launch Shortcut
 echo -e "\n${GREEN}[+] Creating Launch Shortcut...${NC}"
 cat <<EOT > start.sh
 #!/bin/bash
-source $(pwd)/venv/bin/activate
-python3 $(pwd)/librelec.py
+BASEDIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+source "\$BASEDIR/venv/bin/activate"
+python3 "\$BASEDIR/librelec.py" "\$@"
 EOT
 chmod +x start.sh
 
