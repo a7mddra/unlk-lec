@@ -8,6 +8,7 @@ from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
 class CLI:
     def __init__(self):
         self.console = Console()
+        self.success_count = 0
 
     def show_welcome(self):
         self.console.clear()
@@ -25,7 +26,10 @@ class CLI:
         ).ask()
 
     def get_url(self):
-        return questionary.text("Paste the University Login URL (.edu):").ask()
+        return questionary.text(
+            "Paste the University Login URL [e.g. DMU SML4]:",
+            default="https://sml4.dmu.edu.eg/my/courses.php"
+        ).ask()
 
     def show_launching_message(self):
         self.console.print("[dim]Launching Chromium Hook...[/dim]")
@@ -50,10 +54,13 @@ class CLI:
         res = input("Try extraction anyway on current view? [y/N]: ").strip().lower()
         return res == 'y'
 
-    def get_pdf_name(self, default_name=""):
+    def get_pdf_name(self):
         # Fallback to input() to avoid async conflicts inside loop
-        prompt = f"Enter Output Filename [{default_name}]: " if default_name else "Enter Output Filename: "
-        return input(prompt).strip()
+        next_num = self.success_count + 1
+        suggestion = f"Lec{next_num}"
+        prompt = f"Enter Output Filename [e.g. {suggestion}]: "
+        name = input(prompt).strip()
+        return name if name else suggestion
 
     def show_extraction_start(self, pdf_name):
         self.console.clear()
@@ -72,6 +79,7 @@ class CLI:
         self.console.print(f"[bold red]❌ ERROR: {message}[/]")
 
     def show_success(self, path):
+        self.success_count += 1
         self.console.print(f"\n[bold green]SUCCESS[/] 🔓 \nArtifact saved to: [underline]{path}[/]")
 
     def ask_next_step(self):

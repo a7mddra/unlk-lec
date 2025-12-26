@@ -64,8 +64,6 @@ def main():
 
             # --- NAME CONFIG ---
             pdf_name = cli.get_pdf_name()
-            if not pdf_name: 
-                pdf_name = f"lecture_{int(time.time())}"
 
             # --- EXECUTE ---
             cli.show_extraction_start(pdf_name)
