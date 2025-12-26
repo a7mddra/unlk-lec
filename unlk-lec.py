@@ -13,11 +13,7 @@ except ImportError:
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(current_dir, "src"))
 
-try:
-    import nest_asyncio
-    nest_asyncio.apply()
-except ImportError:
-    pass
+
 
 try:
     from src.main import main
