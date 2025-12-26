@@ -1,7 +1,7 @@
 # Security Policy
 
 ## Educational Purpose
-This software (`unlk-lec`) is developed strictly for **educational purposes** and personal study needs (e.g., using accessibility tools like NotebookLM). It demonstrates browser automation techniques using Playwright.
+This software (`LibreLec`) is developed strictly for **educational purposes** and personal study needs (e.g., using accessibility tools like NotebookLM). It demonstrates browser automation techniques using Playwright.
 
 ## Disclaimer
 - **Use at your own risk.** The authors are not responsible for how you use this tool.

@@ -12,7 +12,7 @@ class CLI:
 
     def show_welcome(self):
         self.console.clear()
-        self.console.print(Text(" unlk-lec v1.0 ", style="bold magenta"))
+        self.console.print(Text(" LibreLec v1.0 ", style="bold magenta"))
 
     def get_initial_choice(self):
         return questionary.select(

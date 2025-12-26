@@ -47,7 +47,7 @@ echo -e "\n${GREEN}[+] Creating Launch Shortcut...${NC}"
 cat <<EOT > start.sh
 #!/bin/bash
 source $(pwd)/venv/bin/activate
-python3 $(pwd)/unlk-lec.py
+python3 $(pwd)/librelec.py
 EOT
 chmod +x start.sh
 

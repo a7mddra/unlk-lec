@@ -1,6 +1,6 @@
-# unlk-lec (Unlock Lecture) 🔓
+# LibreLec 🔓
 
-`unlk-lec` is a Python tool designed to extract high-resolution slides from protected university viewers (like PDF.js with DRM wrappers). It "hijacks" the browser canvas to reconstruct the document as a clean, local PDF, enabling you to study using modern tools like Google NotebookLM, iPad annotation apps, or simply offline.
+`LibreLec` is a Python tool designed to extract high-resolution slides from protected university viewers (like PDF.js with DRM wrappers). It "hijacks" the browser canvas to reconstruct the document as a clean, local PDF, enabling you to study using modern tools like Google NotebookLM, iPad annotation apps, or simply offline.
 
 ## Features ✨
 
@@ -49,14 +49,14 @@ We have a one-click setup script that handles the virtual environment (`venv`) a
 
 4.  **Run the Tool**:
     ```cmd
-    python unlk-lec.py
+    python librelec.py
     ```
 
 ---
 
 ## 📖 How to Use
 
-1.  **Launch `unlk-lec`**.
+1.  **Launch `LibreLec`**.
 2.  Select **PDF Document** from the menu.
 3.  Paste your university's login URL (defaults to DMU SML4).
 4.  A browser window will open. **Log in manually**.
