@@ -18,16 +18,9 @@ class PDFMerger:
             print(f"   [DEBUG] Found {len(files)} slides. Preparing PDF...")
             images = [Image.open(os.path.join(image_folder, f)).convert('RGB') for f in files]
             
-            # 2. Get the target directory
+            # 2. Get the target directory (Robust check)
             docs_path = SystemUtils.get_documents_path()
-            
-            # --- THE FIX: Force create the directory if it's missing ---
-            if not docs_path.exists():
-                try:
-                    docs_path.mkdir(parents=True, exist_ok=True)
-                except Exception:
-                    # If we can't create Documents, save to the current folder instead
-                    docs_path = Path(os.getcwd())
+            print(f"   [INFO] Saving to directory: {docs_path}")
 
             # 3. Clean the filename (remove illegal characters)
             safe_name = "".join([c for c in output_filename if c.isalpha() or c.isdigit() or c in (' ', '-', '_')]).strip()
@@ -38,6 +31,7 @@ class PDFMerger:
             # 4. Save the PDF
             images[0].save(str(output_path), "PDF", resolution=100.0, save_all=True, append_images=images[1:])
             
+            print(f"   [SUCCESS] PDF saved successfully at: {output_path}")
             return str(output_path)
 
         except Exception as e:
