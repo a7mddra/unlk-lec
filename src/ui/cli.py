@@ -12,7 +12,65 @@ class CLI:
 
     def show_welcome(self):
         self.console.clear()
-        self.console.print(Text(" LibreLec v1.0 ", style="bold magenta"))
+        self.console.print("\n\n")
+        banner_text = (
+            "██╗      ██╗     ██╗██████╗ ██████╗ ███████╗██╗     ███████╗ ██████╗\n"
+            "╚██╗     ██║     ██║██╔══██╗██╔══██╗██╔════╝██║     ██╔════╝██╔════╝\n"
+            " ╚██╗    ██║     ██║██████╔╝██████╔╝█████╗  ██║     █████╗  ██║     \n"
+            " ██╔╝    ██║     ██║██╔══██╗██╔══██╗██╔══╝  ██║     ██╔══╝  ██║     \n"
+            "██╔╝     ███████╗██║██████╔╝██║  ██║███████╗███████╗███████╗╚██████╗\n"
+            "╚═╝      ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝"
+        )
+        
+        # Gradient: Cyan -> Blue -> Purple (Cyberpunk/Ink style)
+        # We'll do a simple interpolate across the length of each line
+        styled_text = self._apply_gradient(banner_text, ["#00FFFF", "#0080FF", "#8000FF", "#FF00FF"])
+        self.console.print(styled_text)      
+        self.console.print()
+
+    def _apply_gradient(self, text, hex_colors):
+        """Applies a multi-stop horizontal gradient to each line of text."""
+        lines = text.splitlines()
+        result = Text()
+        
+        for line in lines:
+            line_len = len(line)
+            if line_len == 0:
+                result.append("\n")
+                continue
+                
+            for i, char in enumerate(line):
+                # Calculate global position in gradient (0.0 to 1.0)
+                t = i / max(line_len - 1, 1)
+                
+                # Determine which segment of the gradient we are in
+                # if we have N colors, we have N-1 segments
+                if len(hex_colors) == 1:
+                    color = hex_colors[0]
+                else:
+                    segment_count = len(hex_colors) - 1
+                    segment_index = min(int(t * segment_count), segment_count - 1)
+                    segment_t = (t * segment_count) - segment_index
+                    
+                    start_color = self._hex_to_rgb(hex_colors[segment_index])
+                    end_color = self._hex_to_rgb(hex_colors[segment_index + 1])
+                    
+                    current_rgb = self._interpolate_rgb(start_color, end_color, segment_t)
+                    color = self._rgb_to_hex(current_rgb)
+                
+                result.append(char, style=color)
+            result.append("\n")
+        return result
+
+    def _hex_to_rgb(self, hex_color):
+        hex_color = hex_color.lstrip('#')
+        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+    def _rgb_to_hex(self, rgb):
+        return '#{:02x}{:02x}{:02x}'.format(*rgb)
+
+    def _interpolate_rgb(self, start, end, t):
+        return tuple(int(s + (e - s) * t) for s, e in zip(start, end))
 
     def get_initial_choice(self):
         return questionary.select(
@@ -64,6 +122,7 @@ class CLI:
 
     def show_extraction_start(self, pdf_name):
         self.console.clear()
+        self.console.print("\n\n")
         self.console.print(Panel(Text(" INITIATING CANVAS HIJACK PROTOCOL ", style="bold green on black"), border_style="green"))
 
     def create_progress_context(self):

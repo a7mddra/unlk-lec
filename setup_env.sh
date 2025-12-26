@@ -28,11 +28,11 @@ echo -e "\n${GREEN}[+] Installing Dependencies...${NC}"
 source venv/bin/activate
 
 # Install pip dependencies
-pip install --upgrade pip
+pip install --upgrade pip --break-system-packages
 if [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt
+    pip install -r requirements.txt --break-system-packages
 else
-    pip install playwright pillow rich questionary nest_asyncio
+    pip install playwright pillow rich questionary nest_asyncio --break-system-packages
 fi
 
 # 3. Install Playwright Browsers

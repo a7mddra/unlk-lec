@@ -40,7 +40,7 @@ def main():
         print("   [!] Playwright install failed. Try running 'playwright install chromium' manually.")
 
     print_step("Installation Complete!")
-    print("You can now run the tool using: python src/main.py")
+    print("You can now run the tool using: python librelec.py")
 
 if __name__ == "__main__":
     main()
